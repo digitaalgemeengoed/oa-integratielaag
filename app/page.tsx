@@ -1,0 +1,39 @@
+import { config } from "../lib/config";
+
+export const dynamic = "force-dynamic";
+
+export default function Start() {
+  const dev = config.authModus() === "dev";
+  return (
+    <main style={{ maxWidth: 640, margin: "48px auto", padding: "0 16px", lineHeight: 1.5 }}>
+      <h1 style={{ fontSize: 28 }}>Office Assistent</h1>
+      <p>
+        Werkend prototype van de assistent uit <em>XENA Deel II</em>. Een prototype, geen product: gebruik alleen testgegevens.
+      </p>
+      <h2 style={{ fontSize: 20 }}>Proberen</h2>
+      <ul>
+        <li>
+          <a href="/werkomgeving/">Demo-werkomgeving</a>: een eenvoudige tekstverwerker met het paneel van de assistent ernaast.
+        </li>
+        <li>
+          <a href="/api/lees/wie-ben-ik">Wie ben ik?</a> laat zien als wie je bent aangemeld.
+        </li>
+      </ul>
+      {dev ? (
+        <>
+          <h2 style={{ fontSize: 20 }}>Testgebruiker kiezen</h2>
+          <p>Deze omgeving draait zonder echte inlog (OA_AUTH=dev).</p>
+          <ul>
+            <li><a href="/api/auth/login?gebruiker=haarlem-medewerker&terug=/werkomgeving/">Medewerker, Haarlem</a></li>
+            <li><a href="/api/auth/login?gebruiker=haarlem-beheerder&terug=/werkomgeving/">Beheerder, Haarlem</a></li>
+            <li><a href="/api/auth/login?gebruiker=zandvoort-medewerker&terug=/werkomgeving/">Medewerker, Zandvoort</a></li>
+          </ul>
+        </>
+      ) : (
+        <p>
+          <a href="/api/auth/login?terug=/werkomgeving/">Inloggen</a> · <a href="/api/auth/uit">Uitloggen</a>
+        </p>
+      )}
+    </main>
+  );
+}

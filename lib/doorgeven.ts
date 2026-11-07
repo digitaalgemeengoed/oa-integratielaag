@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import type { WieBenIk } from "@oa/contract";
+import type { WieBenIk } from "@digitaalgemeengoed/oa-contract";
 import { config } from "./config";
 import { naarActor } from "./identiteit";
 

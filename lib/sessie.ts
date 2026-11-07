@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import type { WieBenIk } from "@oa/contract";
+import type { WieBenIk } from "@digitaalgemeengoed/oa-contract";
 import { config } from "./config";
 
 /**

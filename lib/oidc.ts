@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from "jose";
-import type { WieBenIk } from "@oa/contract";
+import type { WieBenIk } from "@digitaalgemeengoed/oa-contract";
 import { config } from "./config";
 import { nieuweSleutel } from "./sessie";
 

@@ -12,7 +12,7 @@
     "test": "node --test \"test/*.test.mjs\""
   },
   "dependencies": {
-    "@oa/contract": "^0.1.0",
+    "@digitaalgemeengoed/oa-contract": "^0.1.0",
     "jose": "^6.2.15",
     "next": "^16.4.5",
     "react": "^19.3.1",
@@ -22,5 +22,10 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "typescript": "5.9.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digitaalgemeengoed/oa-integratielaag.git"
+  },
+  "homepage": "https://github.com/digitaalgemeengoed/oa-integratielaag#readme"
 }

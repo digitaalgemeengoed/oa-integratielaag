@@ -16,6 +16,9 @@ export default function Start() {
           <a href="/werkomgeving/">Demo-werkomgeving</a>: een eenvoudige tekstverwerker met het paneel van de assistent ernaast.
         </li>
         <li>
+          <a href="/zoeken">Zoeken</a> in de stukken van je gemeente (als de zoekindex aanstaat).
+        </li>
+        <li>
           <a href="/api/lees/wie-ben-ik">Wie ben ik?</a> laat zien als wie je bent aangemeld.
         </li>
       </ul>

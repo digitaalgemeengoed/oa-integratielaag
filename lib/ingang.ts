@@ -19,7 +19,7 @@ export function ingang(soort: "lezend" | "vastleggend") {
         throw new Weigering(403, "geen-rol", `Hiervoor is de rol ${gevonden.route.rol} nodig.`);
       }
 
-      const doelpad = gevonden.route.pad(gevonden.m);
+      const doelpad = gevonden.route.pad(gevonden.m) + (gevonden.route.metQuery ? req.nextUrl.search : "");
       switch (gevonden.route.doel) {
         case "zelf":
           return NextResponse.json(wie, { headers: { "cache-control": "no-store" } });

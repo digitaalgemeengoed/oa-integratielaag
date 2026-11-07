@@ -28,6 +28,14 @@ function doorsturen(r: Response): Response {
     if (v) h.set(k, v);
   }
   h.set("cache-control", "no-store");
+  // Inhoud van documenten komt van medewerkers en kan scripts bevatten. Op
+  // ons eigen adres uitgeleverd zou dat de sessie in gevaar brengen; de
+  // sandbox geeft de pagina een eigen, lege herkomst zonder scripts.
+  const soort = r.headers.get("content-type") ?? "";
+  if (!soort.startsWith("application/json")) {
+    h.set("content-security-policy", "sandbox; default-src 'none'; img-src data:; style-src 'unsafe-inline'");
+    h.set("x-content-type-options", "nosniff");
+  }
   return new Response(r.body, { status: r.status, headers: h });
 }
 

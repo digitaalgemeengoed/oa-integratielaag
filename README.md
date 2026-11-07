@@ -8,10 +8,16 @@ De **integratielaag** van de Office Assistent, in Next.js. Stelt vast wie er bel
 
 | Ingang | Pad | Wat |
 |---|---|---|
-| Lezend | `/api/lees/...` | Snelle vragen aan de Object Service (alleen GET) en de assistent-services. Commit nooit. |
-| Vastleggend | `/api/vastleg/...` | Objecten aanmaken, metadata en versies vastleggen, objecttypen publiceren (rol beheerder). Elke aanroep levert in het platform een gebeurtenis op. |
+| Lezend | `/api/lees/...` | Snelle vragen aan de Object Service (alleen GET), zoeken en de assistent-services. Commit nooit. |
+| Vastleggend | `/api/vastleg/...` | Objecten aanmaken, metadata en versies vastleggen; objecttypen publiceren en stukken onleesbaar maken (rol beheerder). Elke aanroep levert in het platform een gebeurtenis op. |
 
 Beide ingangen werken met een witte lijst (`lib/routes.ts`): wat daar niet staat, bestaat niet. Elke aanroep die geen GET is, moet de kop `x-oa-verzoek: 1` dragen; een formulier van een andere site kan die niet sturen.
+
+Inhoud van documenten wordt uitgeleverd met `Content-Security-Policy: sandbox`: een document dat scripts bevat, kan zo niets op het adres van de integratielaag.
+
+## Zoekpagina
+
+`/zoeken` zoekt in de stukken van de eigen gemeente, met filters op informatiecategorie en vertrouwelijkheid. Elk resultaat is door het platform in het register bevestigd.
 
 ## Inloggen
 

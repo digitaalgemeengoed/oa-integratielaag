@@ -1,6 +1,6 @@
 {
   "name": "oa-integratielaag",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Integratielaag van de Office Assistent: stelt vast wie er belt, twee ingangen, de browser praat alleen hiermee.",
   "license": "EUPL-1.2",
@@ -12,7 +12,7 @@
     "test": "node --test \"test/*.test.mjs\""
   },
   "dependencies": {
-    "@digitaalgemeengoed/oa-contract": "^0.1.0",
+    "@digitaalgemeengoed/oa-contract": "^0.2.0",
     "jose": "^6.2.15",
     "next": "^16.4.5",
     "react": "^19.3.1",

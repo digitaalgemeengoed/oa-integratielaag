@@ -12,6 +12,8 @@ export interface Route {
   /** Pad bij het doel, uit de delen van het patroon. */
   pad: (m: RegExpMatchArray) => string;
   rol?: "medewerker" | "beheerder";
+  /** De querystring gaat mee naar het doel. */
+  metQuery?: boolean;
 }
 
 const ID = "([0-9a-fA-F-]{36})";
@@ -30,6 +32,7 @@ export const LEZEND: Route[] = [
     pad: (m) => `/objecten/${m[1]}/versies/${m[2]}/inhoud`,
   },
   { methode: "POST", patroon: /^toegankelijkheid$/, doel: "diensten", pad: () => "/toegankelijkheid" },
+  { methode: "GET", patroon: /^zoeken$/, doel: "platform", pad: () => "/zoeken", metQuery: true },
 ];
 
 export const VASTLEGGEND: Route[] = [
@@ -37,6 +40,13 @@ export const VASTLEGGEND: Route[] = [
   { methode: "PUT", patroon: new RegExp(`^objecten/${ID}/metadata$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/metadata` },
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/versies$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/versies` },
   { methode: "POST", patroon: /^objecttypen$/, doel: "platform", pad: () => "/objecttypen", rol: "beheerder" },
+  {
+    methode: "POST",
+    patroon: new RegExp(`^objecten/${ID}/onleesbaar$`),
+    doel: "platform",
+    pad: (m) => `/objecten/${m[1]}/onleesbaar`,
+    rol: "beheerder",
+  },
 ];
 
 export function zoek(lijst: Route[], methode: string, pad: string): { route: Route; m: RegExpMatchArray } | null {

@@ -25,7 +25,7 @@ De integratielaag levert de pagina's van `oa-adapters` uit op haar eigen adres: 
 
 Een sessie kan ook als `Authorization: Bearer`-kop meekomen, voor werkomgevingen waar het cookie niet aankomt (Word voor het web). `POST /api/auth/koppel` geeft, met het cookie, een tweede sessiesleutel voor dezelfde persoon.
 
-Inbedden in een iframe mag alleen door de eigen pagina's (`frame-ancestors 'self'`); voor `/word/` ook door Word voor het web.
+Inbedden in een iframe mag alleen door de eigen pagina's (`frame-ancestors 'self'`); voor `/word/` ook door Word, Excel en PowerPoint voor het web.
 
 ## Zoekpagina
 

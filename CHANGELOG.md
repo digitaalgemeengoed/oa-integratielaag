@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.6.0 — 2026-11-08
+
+- `/word/manifest.xml` geldt nu voor Word, Excel en PowerPoint (hosts Document, Workbook en Presentation, versie 0.4.0.0). De minimale versie van Office.js controleert het takenvenster per programma. Wie het oude manifest heeft geüpload, uploadt het nieuwe opnieuw.
+
 ## 0.5.0 — 2026-11-08
 
 - Collabora: werkbestanden hebben een formaat (docx, ods, odp). Nieuwe voorbeelden: een begroting (ods) en een presentatie (odp), elk met iets voor de assistent. De editor komt per formaat uit de discovery.

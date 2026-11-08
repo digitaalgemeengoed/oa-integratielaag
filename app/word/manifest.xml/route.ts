@@ -4,7 +4,7 @@ import { manifest } from "../../../lib/word-manifest";
 
 export const dynamic = "force-dynamic";
 
-/** /word/manifest.xml: het manifest om in Word te uploaden. */
+/** /word/manifest.xml: het manifest om in Word, Excel of PowerPoint te uploaden (één bestand voor alle drie). */
 export async function GET(req: NextRequest) {
   return new Response(manifest(eigenAdres(req)), {
     headers: {

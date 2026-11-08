@@ -15,6 +15,18 @@ Beide ingangen werken met een witte lijst (`lib/routes.ts`): wat daar niet staat
 
 Inhoud van documenten wordt uitgeleverd met `Content-Security-Policy: sandbox`: een document dat scripts bevat, kan zo niets op het adres van de integratielaag.
 
+## Werkomgevingen
+
+De integratielaag levert de pagina's van `oa-adapters` uit op haar eigen adres: `/werkomgeving`, `/word/…`, `/collabora` en `/libreoffice`. Daarnaast:
+
+- `/word/manifest.xml`: het manifest van de Word-invoegtoepassing, met het adres van deze omgeving.
+- `/libreoffice/office-assistent.oxt`: de LibreOffice-extensie, met het adres van deze omgeving.
+- `/wopi/files/:id` en `/wopi/files/:id/contents`: de WOPI-host voor Collabora Online, alleen met een toegangssleutel die de integratielaag per medewerker en werkbestand uitgeeft. `/api/collabora/…` beheert de werkbestanden. Aan met `COLLABORA_INTERN`.
+
+Een sessie kan ook als `Authorization: Bearer`-kop meekomen, voor werkomgevingen waar het cookie niet aankomt (Word voor het web). `POST /api/auth/koppel` geeft, met het cookie, een tweede sessiesleutel voor dezelfde persoon.
+
+Inbedden in een iframe mag alleen door de eigen pagina's (`frame-ancestors 'self'`); voor `/word/` ook door Word voor het web.
+
 ## Zoekpagina
 
 `/zoeken` zoekt in de stukken van de eigen gemeente, met filters op informatiecategorie en vertrouwelijkheid. Elk resultaat is door het platform in het register bevestigd.
@@ -30,10 +42,10 @@ Sessies staan in het prototype in het geheugen van één proces. Voor meer insta
 
 ## Bouwen en draaien
 
-De demo-werkomgeving moet in `public/` staan **vóór** `next build`; Next.js levert alleen bestanden uit die er bij het bouwen al waren.
+De pagina's van de werkomgevingen moeten in `public/` staan **vóór** `next build`; Next.js levert alleen bestanden uit die er bij het bouwen al waren.
 
 ```
-node scripts/werkomgeving.mjs ../oa-adapters/dist/werkomgeving
+node scripts/werkomgeving.mjs ../oa-adapters/dist/web
 npm run build
 npm start          # poort 3000
 ```

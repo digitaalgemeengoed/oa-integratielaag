@@ -33,8 +33,12 @@ const nextConfig = {
   turbopack: { root: wortel },
   outputFileTracingRoot: wortel,
   async rewrites() {
-    // De gebouwde demo-werkomgeving staat in public/werkomgeving.
-    return [{ source: "/werkomgeving", destination: "/werkomgeving/index.html" }];
+    // De gebouwde pagina's van oa-adapters staan in public/.
+    return [
+      { source: "/werkomgeving", destination: "/werkomgeving/index.html" },
+      { source: "/collabora", destination: "/collabora/index.html" },
+      { source: "/libreoffice", destination: "/libreoffice/index.html" },
+    ];
   },
   async headers() {
     return [
@@ -43,6 +47,19 @@ const nextConfig = {
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "same-origin" },
+          // Niemand mag deze pagina's in een iframe zetten, behalve wij zelf...
+          { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+        ],
+      },
+      {
+        // ...en Word voor het web: dat toont het takenvenster in een iframe.
+        source: "/word/:pad*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self' https://*.officeapps.live.com https://*.office.com https://*.office365.com https://*.microsoft365.com https://*.cloud.microsoft https://*.sharepoint.com https://*.officeppe.com",
+          },
         ],
       },
     ];

@@ -49,6 +49,17 @@ export function leesSessie(sleutel: string | undefined): Sessie | null {
   return s;
 }
 
+/**
+ * Een tweede sessie voor dezelfde persoon, voor een werkomgeving die geen
+ * cookie kan gebruiken. Eigen sleutel, zelfde identiteit en verlooptijd:
+ * uitloggen in de browser trekt deze niet in, verlopen wel.
+ */
+export function koppelSessie(bron: Sessie): string {
+  const sleutel = nieuweSleutel();
+  sessies.set(sleutel, { ...bron });
+  return sleutel;
+}
+
 export function beeindigSessie(sleutel: string | undefined): void {
   if (sleutel) sessies.delete(sleutel);
 }

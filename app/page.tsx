@@ -16,6 +16,16 @@ export default function Start() {
           <a href="/werkomgeving/">Demo-werkomgeving</a>: een eenvoudige tekstverwerker met het paneel van de assistent ernaast.
         </li>
         <li>
+          <strong>Microsoft Word</strong> (ook Word voor het web): download het <a href="/word/manifest.xml">manifest</a> en kies in Word{" "}
+          <em>Invoegtoepassingen → Mijn invoegtoepassingen → Mijn invoegtoepassing uploaden</em>. De knop <em>Assistent</em> staat daarna op het tabblad Start.
+        </li>
+        <li>
+          <a href="/collabora">Collabora Online</a>: LibreOffice in de browser, met het paneel ernaast (als Collabora in deze omgeving aanstaat).
+        </li>
+        <li>
+          <a href="/libreoffice">LibreOffice op je eigen computer</a>: installeer de extensie en open de assistent vanuit het menu van Writer.
+        </li>
+        <li>
           <a href="/zoeken">Zoeken</a> in de stukken van je gemeente (als de zoekindex aanstaat).
         </li>
         <li>

@@ -17,14 +17,28 @@ const DEV_GEBRUIKERS: Record<string, WieBenIk> = {
  */
 export function wieBeltEr(req: NextRequest): WieBenIk {
   if (config.authModus() === "dev") {
-    const kies = req.headers.get("x-oa-dev-gebruiker") ?? req.cookies.get("oa_dev_gebruiker")?.value ?? "haarlem-medewerker";
+    const kop = req.headers.get("authorization");
+    const viaKop = kop?.startsWith("Bearer dev:") ? kop.slice(11) : null;
+    const kies = viaKop ?? req.headers.get("x-oa-dev-gebruiker") ?? req.cookies.get("oa_dev_gebruiker")?.value ?? "haarlem-medewerker";
     const g = DEV_GEBRUIKERS[kies];
     if (!g) throw new Weigering(401, "niet-ingelogd", "Onbekende testgebruiker.");
     return g;
   }
-  const s = leesSessie(req.cookies.get(SESSIECOOKIE)?.value);
+  const s = leesSessie(sessiesleutel(req));
   if (!s) throw new Weigering(401, "niet-ingelogd", "Log eerst in.");
   return s.identiteit;
+}
+
+/**
+ * De sessiesleutel: uit het cookie, of uit de kop "Authorization: Bearer".
+ * De kop is voor werkomgevingen waar het cookie niet aankomt, zoals een
+ * Office-invoegtoepassing in een iframe van office.com. Een kop stuurt een
+ * andere site nooit vanzelf mee, dus CSRF speelt daar niet.
+ */
+export function sessiesleutel(req: NextRequest): string | undefined {
+  const kop = req.headers.get("authorization");
+  if (kop?.startsWith("Bearer ")) return kop.slice(7).trim() || undefined;
+  return req.cookies.get(SESSIECOOKIE)?.value;
 }
 
 /**

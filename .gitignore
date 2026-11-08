@@ -5,5 +5,10 @@ next-env.d.ts
 *.tsbuildinfo
 data/
 .env
-public/werkomgeving/
 bron/
+public/werkomgeving/
+public/word/
+public/collabora/
+public/libreoffice/
+public/assets/
+.werkbestanden/

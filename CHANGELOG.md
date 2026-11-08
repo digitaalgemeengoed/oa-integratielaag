@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.4.0 — 2026-11-08
+
+Leesroute voor weergaven van een versie; `/api/collabora/bestanden/:id/bestand` levert het werkbestand als origineel.
+
 ## 0.3.0 — 2026-11-08
 
 - Sessie ook via `Authorization: Bearer`, en `POST /api/auth/koppel` voor een tweede sessiesleutel (Word-invoegtoepassing).

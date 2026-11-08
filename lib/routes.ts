@@ -31,6 +31,12 @@ export const LEZEND: Route[] = [
     doel: "platform",
     pad: (m) => `/objecten/${m[1]}/versies/${m[2]}/inhoud`,
   },
+  {
+    methode: "GET",
+    patroon: new RegExp(`^objecten/${ID}/versies/([0-9]{1,6})/weergaven/(html|tekst|pdf)$`),
+    doel: "platform",
+    pad: (m) => `/objecten/${m[1]}/versies/${m[2]}/weergaven/${m[3]}`,
+  },
   { methode: "POST", patroon: /^toegankelijkheid$/, doel: "diensten", pad: () => "/toegankelijkheid" },
   { methode: "GET", patroon: /^zoeken$/, doel: "platform", pad: () => "/zoeken", metQuery: true },
 ];

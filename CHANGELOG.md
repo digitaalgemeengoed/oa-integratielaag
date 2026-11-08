@@ -1,5 +1,10 @@
 # Wijzigingen
 
+## 0.7.0 — 2026-11-09
+
+- Manifest 0.5.0.0: een eigen tabblad **Assistent** in Word, Excel en PowerPoint, met Paneel, de modules en Beoordelen. De knoppen werken via een gedeelde runtime (SharedRuntime 1.1: Word vanaf 2205, Excel 2002, PowerPoint 2102, en de webversies). Upload het manifest opnieuw.
+- Route `PUT /api/vastleg/objecten/:id/aard` (persoonlijk naar zakelijk).
+
 ## 0.6.0 — 2026-11-08
 
 - `/word/manifest.xml` geldt nu voor Word, Excel en PowerPoint (hosts Document, Workbook en Presentation, versie 0.4.0.0). De minimale versie van Office.js controleert het takenvenster per programma. Wie het oude manifest heeft geüpload, uploadt het nieuwe opnieuw.

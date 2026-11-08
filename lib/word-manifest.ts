@@ -5,6 +5,9 @@
  * bestand. Welke versie van Office.js minimaal nodig is, controleert het
  * takenvenster zelf per programma (WordApi 1.3, ExcelApi 1.9,
  * PowerPointApi 1.4); in het manifest zou één eis voor alle drie gelden.
+ * Wel in het manifest: SharedRuntime 1.1, voor de knoppen op het tabblad
+ * Assistent (Word vanaf versie 2205, Excel 2002, PowerPoint 2102, en de
+ * webversies).
  */
 const ID = "b600d63a-a8ab-46cd-9f8d-c60b6e9cab00";
 
@@ -12,44 +15,74 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 
 const HOSTS = ["Document", "Workbook", "Presentation"] as const;
 
-const knop = (h: (typeof HOSTS)[number]) => `      <Host xsi:type="${h}">
+/**
+ * De knoppen op het tabblad Assistent, zoals in de demo (MIRA). Ze roepen
+ * een functie aan in het takenvenster (gedeelde runtime, SharedRuntime 1.1):
+ * het venster gaat open en toont de module.
+ */
+const KNOPPEN = {
+  paneel: { label: "Paneel", uitleg: "Het paneel van de assistent tonen of verbergen." },
+  ovz: { label: "Overzicht", uitleg: "Status, versie en wat er nog open staat." },
+  ond: { label: "Onderdelen", uitleg: "Wat van elders komt. Volgt in het prototype." },
+  meta: { label: "Metadateren", uitleg: "Kenmerken van het stuk, registreren en vastleggen." },
+  toeg: { label: "Toegankelijkheid", uitleg: "Structuur en alternatieve tekst." },
+  anon: { label: "Anonimiseren", uitleg: "Persoonsgegevens vinden en afschermen. Volgt in het prototype." },
+  clas: { label: "Classificeren", uitleg: "Openbaarheid en bewaring. Volgt in het prototype." },
+  waar: { label: "Waarmerken", uitleg: "Authenticiteit en integriteit van een versie. Volgt in het prototype." },
+  flow: { label: "Workflow", uitleg: "Stappen van de procedure. Volgt in het prototype." },
+  beoordelen: { label: "Beoordelen", uitleg: "Het stuk beoordelen op toegankelijkheid." },
+} as const;
+type Knop = keyof typeof KNOPPEN;
+const GROEPEN: [string, string, Knop[]][] = [
+  ["OA.G.Paneel", "Paneel", ["paneel"]],
+  ["OA.G.Modules", "Modules", ["ovz", "ond", "meta", "toeg", "anon", "clas", "waar", "flow"]],
+  ["OA.G.Controleren", "Controleren", ["beoordelen"]],
+];
+
+const icoon = (id: string) => `<Icon>
+                      <bt:Image size="16" resid="OA.I.${id}.16"/>
+                      <bt:Image size="32" resid="OA.I.${id}.32"/>
+                      <bt:Image size="80" resid="OA.I.${id}.80"/>
+                    </Icon>`;
+
+const knop = (id: Knop) => `
+                  <Control xsi:type="Button" id="OA.K.${id}">
+                    <Label resid="OA.L.${id}"/>
+                    <Supertip>
+                      <Title resid="OA.L.${id}"/>
+                      <Description resid="OA.U.${id}"/>
+                    </Supertip>
+                    ${icoon(id)}
+                    <Action xsi:type="ExecuteFunction">
+                      <FunctionName>oa_${id}</FunctionName>
+                    </Action>
+                  </Control>`;
+
+const hostBlok = (h: (typeof HOSTS)[number]) => `
+      <Host xsi:type="${h}">
+        <Runtimes>
+          <Runtime resid="OA.Taakvenster.Url" lifetime="long"/>
+        </Runtimes>
         <DesktopFormFactor>
           <GetStarted>
             <Title resid="OA.Titel"/>
             <Description resid="OA.Uitleg"/>
             <LearnMoreUrl resid="OA.Meer"/>
           </GetStarted>
+          <FunctionFile resid="OA.Taakvenster.Url"/>
           <ExtensionPoint xsi:type="PrimaryCommandSurface">
-            <OfficeTab id="TabHome">
-              <Group id="OA.Groep">
-                <Label resid="OA.Titel"/>
-                <Icon>
-                  <bt:Image size="16" resid="OA.Icoon16"/>
-                  <bt:Image size="32" resid="OA.Icoon32"/>
-                  <bt:Image size="80" resid="OA.Icoon80"/>
-                </Icon>
-                <Control xsi:type="Button" id="OA.Knop">
-                  <Label resid="OA.Knop"/>
-                  <Supertip>
-                    <Title resid="OA.Knop"/>
-                    <Description resid="OA.Uitleg"/>
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="OA.Icoon16"/>
-                    <bt:Image size="32" resid="OA.Icoon32"/>
-                    <bt:Image size="80" resid="OA.Icoon80"/>
-                  </Icon>
-                  <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>OA.Taakvenster</TaskpaneId>
-                    <SourceLocation resid="OA.Taakvenster.Url"/>
-                  </Action>
-                </Control>
-              </Group>
-            </OfficeTab>
+            <CustomTab id="OA.Tab">${GROEPEN.map(
+              ([id, label, knoppen]) => `
+              <Group id="${id}">
+                <Label resid="${id}"/>
+                ${icoon(knoppen[0])}${knoppen.map(knop).join("")}
+              </Group>`,
+            ).join("")}
+              <Label resid="OA.Tab"/>
+            </CustomTab>
           </ExtensionPoint>
         </DesktopFormFactor>
-      </Host>
-`;
+      </Host>`;
 
 export function manifest(basis: string): string {
   const b = esc(basis.replace(/\/$/, ""));
@@ -62,7 +95,7 @@ export function manifest(basis: string): string {
            xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
            xsi:type="TaskPaneApp">
   <Id>${ID}</Id>
-  <Version>0.4.0.0</Version>
+  <Version>0.5.0.0</Version>
   <ProviderName>Digitaal GemeenGoed</ProviderName>
   <DefaultLocale>nl-NL</DefaultLocale>
   <DisplayName DefaultValue="Office Assistent"/>
@@ -79,18 +112,27 @@ export function manifest(basis: string): string {
     <Host Name="Workbook"/>
     <Host Name="Presentation"/>
   </Hosts>
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="SharedRuntime" MinVersion="1.1"/>
+    </Sets>
+  </Requirements>
   <DefaultSettings>
     <SourceLocation DefaultValue="${b}/word/taskpane.html"/>
   </DefaultSettings>
   <Permissions>ReadWriteDocument</Permissions>
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Hosts>
-${HOSTS.map((h) => knop(h)).join("")}    </Hosts>
+${HOSTS.map(hostBlok).join("")}
+    </Hosts>
     <Resources>
       <bt:Images>
         <bt:Image id="OA.Icoon16" DefaultValue="${b}/word/icoon-16.png"/>
         <bt:Image id="OA.Icoon32" DefaultValue="${b}/word/icoon-32.png"/>
-        <bt:Image id="OA.Icoon80" DefaultValue="${b}/word/icoon-80.png"/>
+        <bt:Image id="OA.Icoon80" DefaultValue="${b}/word/icoon-80.png"/>${Object.keys(KNOPPEN)
+          .flatMap((id) => [16, 32, 80].map((n) => `
+        <bt:Image id="OA.I.${id}.${n}" DefaultValue="${b}/iconen/${id}-${n}.png"/>`))
+          .join("")}
       </bt:Images>
       <bt:Urls>
         <bt:Url id="OA.Taakvenster.Url" DefaultValue="${b}/word/taskpane.html"/>
@@ -98,10 +140,17 @@ ${HOSTS.map((h) => knop(h)).join("")}    </Hosts>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="OA.Titel" DefaultValue="Office Assistent"/>
-        <bt:String id="OA.Knop" DefaultValue="Assistent"/>
+        <bt:String id="OA.Tab" DefaultValue="Assistent"/>${GROEPEN.map(([id, label]) => `
+        <bt:String id="${id}" DefaultValue="${label}"/>`).join("")}${Object.entries(KNOPPEN)
+          .map(([id, k]) => `
+        <bt:String id="OA.L.${id}" DefaultValue="${k.label}"/>`)
+          .join("")}
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="OA.Uitleg" DefaultValue="Open de Office Assistent: metadata, toegankelijkheid en vastleggen."/>
+        <bt:String id="OA.Uitleg" DefaultValue="Open de Office Assistent: metadata, toegankelijkheid en vastleggen."/>${Object.entries(KNOPPEN)
+          .map(([id, k]) => `
+        <bt:String id="OA.U.${id}" DefaultValue="${k.uitleg}"/>`)
+          .join("")}
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>

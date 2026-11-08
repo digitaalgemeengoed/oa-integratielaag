@@ -45,6 +45,7 @@ export const VASTLEGGEND: Route[] = [
   { methode: "POST", patroon: /^objecten$/, doel: "platform", pad: () => "/objecten" },
   { methode: "PUT", patroon: new RegExp(`^objecten/${ID}/metadata$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/metadata` },
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/versies$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/versies` },
+  { methode: "PUT", patroon: new RegExp(`^objecten/${ID}/aard$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/aard` },
   { methode: "POST", patroon: /^objecttypen$/, doel: "platform", pad: () => "/objecttypen", rol: "beheerder" },
   {
     methode: "POST",

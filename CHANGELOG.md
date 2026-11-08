@@ -1,5 +1,11 @@
 # Wijzigingen
 
+## 0.5.0 — 2026-11-08
+
+- Collabora: werkbestanden hebben een formaat (docx, ods, odp). Nieuwe voorbeelden: een begroting (ods) en een presentatie (odp), elk met iets voor de assistent. De editor komt per formaat uit de discovery.
+- `lib/odf.ts`: rekenbladen en presentaties lezen als secties (`data-oa="blad"` en `"dia"`) en herstellen op een plek (blad hernoemen, titel van een dia, ook zonder titelvak, alternatieve tekst), in content.xml. Route `POST /api/collabora/bestanden/:id/segment`. Het hele bestand vervangen kan voor ods en odp niet.
+- Tests (`npm test`): lezen, de regels van oa-services, herstellen, en of LibreOffice de bestanden opent.
+
 ## 0.4.0 — 2026-11-08
 
 Leesroute voor weergaven van een versie; `/api/collabora/bestanden/:id/bestand` levert het werkbestand als origineel.

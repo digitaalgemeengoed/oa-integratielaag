@@ -32,9 +32,19 @@ export function moetAanstaan(): void {
 // Werkbestanden
 // ---------------------------------------------------------------------------
 
+export type WerkFormaat = "docx" | "ods" | "odp";
+
+export const WERK_MEDIATYPE: Record<WerkFormaat, string> = {
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ods: "application/vnd.oasis.opendocument.spreadsheet",
+  odp: "application/vnd.oasis.opendocument.presentation",
+};
+
 export interface Werkbestand {
   id: string;
   naam: string;
+  /** Het formaat van het bestand; ontbreekt bij werkbestanden van voor 0.5 (dan docx). */
+  formaat?: WerkFormaat;
   gemeente: string;
   eigenaar: string;
   versie: number;
@@ -74,22 +84,26 @@ export async function bewaarMeta(w: Werkbestand): Promise<void> {
   await schrijfVeilig(pad(w.id, "json"), JSON.stringify(w, null, 2));
 }
 
+export function formaatVan(w: Werkbestand): WerkFormaat {
+  return w.formaat ?? "docx";
+}
+
 export async function leesInhoud(id: string): Promise<Buffer> {
-  return readFile(pad(id, "docx"));
+  return readFile(pad(id, formaatVan(await leesWerkbestand(id))));
 }
 
 export async function schrijfInhoud(w: Werkbestand, data: Uint8Array): Promise<Werkbestand> {
-  await schrijfVeilig(pad(w.id, "docx"), data);
+  await schrijfVeilig(pad(w.id, formaatVan(w)), data);
   const nieuw = { ...w, versie: w.versie + 1, gewijzigd: new Date().toISOString() };
   await bewaarMeta(nieuw);
   return nieuw;
 }
 
-export async function maakWerkbestand(wie: WieBenIk, naam: string, docx: Uint8Array): Promise<Werkbestand> {
+export async function maakWerkbestand(wie: WieBenIk, naam: string, data: Uint8Array, formaat: WerkFormaat = "docx"): Promise<Werkbestand> {
   await mkdir(/*turbopackIgnore: true*/ collaboraConfig.map(), { recursive: true, mode: 0o700 });
-  const w: Werkbestand = { id: randomUUID(), naam, gemeente: wie.gemeente, eigenaar: wie.sub, versie: 0, gewijzigd: new Date().toISOString(), eigenschappen: {} };
+  const w: Werkbestand = { id: randomUUID(), naam, formaat, gemeente: wie.gemeente, eigenaar: wie.sub, versie: 0, gewijzigd: new Date().toISOString(), eigenschappen: {} };
   await bewaarMeta(w);
-  return schrijfInhoud(w, docx);
+  return schrijfInhoud(w, data);
 }
 
 export async function lijstWerkbestanden(wie: WieBenIk): Promise<Werkbestand[]> {
@@ -145,20 +159,24 @@ function veiligGelijk(a: string, b: string): boolean {
 // Collabora zelf: discovery en conversie
 // ---------------------------------------------------------------------------
 
-let ontdekt: { tijd: number; urlsrc: string } | null = null;
+let ontdekt: { tijd: number; xml: string } | null = null;
 
-/** Het adres van de editor voor docx, uit /hosting/discovery. */
-export async function editorAdres(): Promise<string> {
-  if (ontdekt && Date.now() - ontdekt.tijd < 3600_000) return ontdekt.urlsrc;
-  const r = await fetch(`${collaboraConfig.intern()}/hosting/discovery`, { signal: AbortSignal.timeout(10_000) }).catch(() => null);
-  if (!r?.ok) throw new Weigering(503, "collabora-weg", "Collabora Online is nu niet bereikbaar.");
-  const xml = await r.text();
-  const app = /<app[^>]+name="application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document"[^>]*>([\s\S]*?)<\/app>/.exec(xml);
+/** Het adres van de editor voor dit soort bestand, uit /hosting/discovery. */
+export async function editorAdres(formaat: WerkFormaat = "docx"): Promise<string> {
+  if (!ontdekt || Date.now() - ontdekt.tijd > 3600_000) {
+    const r = await fetch(`${collaboraConfig.intern()}/hosting/discovery`, { signal: AbortSignal.timeout(10_000) }).catch(() => null);
+    if (!r?.ok) throw new Weigering(503, "collabora-weg", "Collabora Online is nu niet bereikbaar.");
+    ontdekt = { tijd: Date.now(), xml: await r.text() };
+  }
+  const xml = ontdekt.xml;
+  const mime = WERK_MEDIATYPE[formaat].replace(/[.]/g, "\\.");
+  const app = new RegExp(`<app[^>]+name="${mime}"[^>]*>([\\s\\S]*?)<\\/app>`).exec(xml);
   const actie = app && /<action[^>]+name="edit"[^>]+urlsrc="([^"]+)"/.exec(app[1]);
-  const urlsrc = actie?.[1] ?? /urlsrc="([^"]+)"/.exec(xml)?.[1];
+  // Valt terug op de extensie (sommige versies noemen de app naar het programma).
+  const opExt = new RegExp(`<action[^>]+ext="${formaat}"[^>]+name="edit"[^>]+urlsrc="([^"]+)"|<action[^>]+name="edit"[^>]+ext="${formaat}"[^>]+urlsrc="([^"]+)"`).exec(xml);
+  const urlsrc = actie?.[1] ?? opExt?.[1] ?? opExt?.[2] ?? /urlsrc="([^"]+)"/.exec(xml)?.[1];
   if (!urlsrc) throw new Weigering(503, "collabora-weg", "Collabora Online gaf geen editoradres.");
-  ontdekt = { tijd: Date.now(), urlsrc: urlsrc.replace(/&amp;/g, "&") };
-  return ontdekt.urlsrc;
+  return urlsrc.replace(/&amp;/g, "&");
 }
 
 /** Zet een bestand om met Collabora (convert-to). */

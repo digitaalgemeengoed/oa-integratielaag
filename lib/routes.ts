@@ -56,6 +56,7 @@ export const VASTLEGGEND: Route[] = [
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii/onthul$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii/onthul` },
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii/vernietig$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii/vernietig`, rol: "beheerder" },
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii/vervallen$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii/vervallen` },
+  { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii/categorie$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii/categorie` },
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii/bevestig$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii/bevestig` },
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii/terugzetten$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii/terugzetten` },
   {

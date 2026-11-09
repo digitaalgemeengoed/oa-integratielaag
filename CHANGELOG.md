@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.9.5 — 2026-11-09
+
+Route `POST /api/vastleg/objecten/:id/pii/categorie` (de grondslag van een voorvertoning wijzigen) naar het platform.
+
 ## 0.9.4 — 2026-11-09
 
 **Inloggen zonder kale foutmeldingen.** Ging het inloggen mis, dan stond er JSON in de zijbalk of het aanmeldvenster. Nu:

@@ -1,5 +1,16 @@
 # Wijzigingen
 
+## 0.9.4 — 2026-11-09
+
+**Inloggen zonder kale foutmeldingen.** Ging het inloggen mis, dan stond er JSON in de zijbalk of het aanmeldvenster. Nu:
+
+- **Te lang gewacht** op het inlogscherm, of de inloglink al gebruikt (terugknop, tweede tabblad): één keer vanzelf opnieuw inloggen; meestal merk je daar niets van. Lukt dat ook niet, dan de pagina `/inloggen` met uitleg en een knop *Opnieuw inloggen*.
+- **Al ingelogd** (terugknop na het inloggen): gewoon door naar waar je heen wilde.
+- **Geannuleerd of geweigerd** bij Keycloak, of **Keycloak niet bereikbaar**: dezelfde pagina, met de passende uitleg.
+- Een inlogpoging blijft 30 minuten geldig (was 10), gelijk aan Keycloak. Waar je heen wilde, staat ook in een kort cookie, zodat het niet kwijtraakt.
+- Was Keycloak één keer onbereikbaar, dan bleef inloggen stuk tot een herstart van de integratielaag. Nu niet meer.
+- Verlopen sessies en inlogpogingen worden opgeruimd.
+
 ## 0.9.3 — 2026-11-09
 
 - `/versies.json` (openbaar): de versies van het manifest, de extensie en wat op de servers draait, voor de downloadpagina op office.<domein>.

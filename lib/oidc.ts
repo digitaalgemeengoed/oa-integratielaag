@@ -18,13 +18,35 @@ interface Ontdekking {
   issuer: string;
 }
 
+/**
+ * Wat er bij de inlogdienst misging. "code-ongeldig": de code is verlopen of
+ * al gebruikt (opnieuw inloggen helpt); "dienst": Keycloak niet bereikbaar of
+ * een fout aan zijn kant; "token": het token klopt niet.
+ */
+export class InlogFout extends Error {
+  constructor(
+    readonly soort: "code-ongeldig" | "dienst" | "token",
+    melding: string,
+  ) {
+    super(melding);
+  }
+}
+
 let ontdekt: Promise<Ontdekking> | null = null;
 let sleutels: ReturnType<typeof createRemoteJWKSet> | null = null;
 
 async function ontdek(): Promise<Ontdekking> {
-  ontdekt ??= fetch(`${config.oidc.issuer()}/.well-known/openid-configuration`).then((r) => {
-    if (!r.ok) throw new Error(`OIDC-ontdekking mislukt: ${r.status}`);
-    return r.json() as Promise<Ontdekking>;
+  ontdekt ??= fetch(`${config.oidc.issuer()}/.well-known/openid-configuration`)
+    .catch((e: Error) => {
+      throw new InlogFout("dienst", `Inlogdienst niet bereikbaar: ${e.message}`);
+    })
+    .then((r) => {
+      if (!r.ok) throw new InlogFout("dienst", `OIDC-ontdekking mislukt: ${r.status}`);
+      return r.json() as Promise<Ontdekking>;
+    });
+  // Mislukt de ontdekking, dan niet onthouden: anders blijft inloggen stuk tot een herstart, ook als Keycloak terug is.
+  ontdekt.catch(() => {
+    ontdekt = null;
   });
   return ontdekt;
 }
@@ -57,11 +79,23 @@ export async function wisselCode(code: string, verifier: string): Promise<{ iden
       client_secret: config.oidc.clientSecret(),
       code_verifier: verifier,
     }),
+  }).catch((e: Error) => {
+    throw new InlogFout("dienst", `Inlogdienst niet bereikbaar: ${e.message}`);
   });
-  if (!r.ok) throw new Error(`Tokenwissel mislukt: ${r.status}`);
+  if (!r.ok) {
+    const f = (await r.json().catch(() => ({}))) as { error?: string; error_description?: string };
+    // invalid_grant: code verlopen of al gebruikt (terugknop, te lang gewacht). Opnieuw inloggen helpt.
+    if (r.status === 400 && f.error === "invalid_grant") throw new InlogFout("code-ongeldig", `Code ongeldig: ${f.error_description ?? f.error}`);
+    throw new InlogFout(r.status >= 500 ? "dienst" : "token", `Tokenwissel mislukt: ${r.status} ${f.error ?? ""}`.trim());
+  }
   const tokens = (await r.json()) as { access_token: string; id_token: string };
   sleutels ??= createRemoteJWKSet(new URL(o.jwks_uri));
-  const { payload } = await jwtVerify(tokens.access_token, sleutels, { issuer: o.issuer });
+  let payload: JWTPayload;
+  try {
+    ({ payload } = await jwtVerify(tokens.access_token, sleutels, { issuer: o.issuer }));
+  } catch (e) {
+    throw new InlogFout("token", `Token niet geldig: ${(e as Error).message}`);
+  }
   return { identiteit: naarIdentiteit(payload), accessToken: tokens.access_token };
 }
 

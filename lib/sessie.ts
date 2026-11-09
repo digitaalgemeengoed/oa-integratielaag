@@ -28,11 +28,22 @@ const pogingen = (g.__oaPogingen ??= new Map());
 
 export const SESSIECOOKIE = "oa_sessie";
 
+/** Zo lang mag het inlogscherm open staan; gelijk aan de standaard van Keycloak (30 minuten). */
+export const POGING_MINUTEN = 30;
+
+/** Verlopen sessies en pogingen weghalen, zodat het geheugen niet volloopt. */
+function ruimOp(): void {
+  const nu = Date.now();
+  for (const [k, s] of sessies) if (s.verloopt < nu) sessies.delete(k);
+  for (const [k, p] of pogingen) if (p.verloopt < nu) pogingen.delete(k);
+}
+
 export function nieuweSleutel(): string {
   return randomBytes(32).toString("base64url");
 }
 
 export function maakSessie(identiteit: WieBenIk, accessToken?: string): string {
+  ruimOp();
   const sleutel = nieuweSleutel();
   sessies.set(sleutel, { identiteit, accessToken, verloopt: Date.now() + config.sessieUren * 3600_000 });
   return sleutel;
@@ -65,6 +76,7 @@ export function beeindigSessie(sleutel: string | undefined): void {
 }
 
 export function bewaarPoging(state: string, p: Inlogpoging): void {
+  ruimOp();
   pogingen.set(state, p);
 }
 

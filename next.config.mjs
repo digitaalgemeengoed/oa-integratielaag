@@ -25,9 +25,32 @@ function bouwwortel() {
 
 const wortel = bouwwortel();
 
+/** Versies van de onderdelen die in deze integratielaag zijn meegebouwd (voor de overzichtspagina). */
+function versies() {
+  const uit = {};
+  for (const naam of ["oa-contract", "oa-kern", "oa-paneel", "oa-adapters", "oa-integratielaag"]) {
+    for (const map of [join(wortel, naam), join(wortel, "node_modules", "@digitaalgemeengoed", naam)]) {
+      try {
+        uit[naam] = JSON.parse(readFileSync(join(map, "package.json"), "utf8")).version;
+        break;
+      } catch {
+        /* volgende plek */
+      }
+    }
+  }
+  try {
+    const d = readFileSync(join(wortel, "oa-adapters", "libreoffice-extensie", "description.xml"), "utf8");
+    uit["libreoffice-extensie"] = /<version value="([^"]+)"/.exec(d)?.[1];
+  } catch {
+    /* niet in deze werkplaats */
+  }
+  return uit;
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  env: { OA_VERSIES: JSON.stringify(versies()) },
   poweredByHeader: false,
   transpilePackages: ["@digitaalgemeengoed/oa-contract"],
   turbopack: { root: wortel },

@@ -84,6 +84,9 @@ const hostBlok = (h: (typeof HOSTS)[number]) => `
         </DesktopFormFactor>
       </Host>`;
 
+/** Versie van het manifest. Ophogen als de knoppen of het lint veranderen: alleen dan moet het opnieuw worden geüpload. */
+export const MANIFEST_VERSIE = "0.5.1.0";
+
 export function manifest(basis: string): string {
   const b = esc(basis.replace(/\/$/, ""));
   const host = new URL(basis).hostname;
@@ -95,7 +98,7 @@ export function manifest(basis: string): string {
            xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
            xsi:type="TaskPaneApp">
   <Id>${ID}</Id>
-  <Version>0.5.1.0</Version>
+  <Version>${MANIFEST_VERSIE}</Version>
   <ProviderName>Digitaal GemeenGoed</ProviderName>
   <DefaultLocale>nl-NL</DefaultLocale>
   <DisplayName DefaultValue="Office Assistent"/>

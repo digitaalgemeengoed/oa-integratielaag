@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.9.7 — 2026-11-09
+
+Hangt af van oa-contract 0.6.0; de meting bij bevestigen gaat ongewijzigd door naar het platform.
+
 ## 0.9.6 — 2026-11-09
 
 `GET /api/lees/objecttypen/:naam?versie=n`: het paneel haalt het metadatamodel op waarmee een stuk is vastgelegd. De zoekpagina toont titel en categorie via de rollen (ook bij RGBZ of TMLO).

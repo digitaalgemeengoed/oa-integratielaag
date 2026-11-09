@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.7.1 — 2026-11-09
+
+Routes voor anonimiseren: `POST /api/lees/anonimiseren`, `POST /api/lees/anonimiseren/toepassen`, `POST /api/vastleg/objecten/:id/versies/:n/anonimisering`; de weergave-route geeft `?soort=geanonimiseerd` door. Manifest 0.5.1.0 (Anonimiseren niet meer "volgt").
+
 ## 0.7.0 — 2026-11-09
 
 - Manifest 0.5.0.0: een eigen tabblad **Assistent** in Word, Excel en PowerPoint, met Paneel, de modules en Beoordelen. De knoppen werken via een gedeelde runtime (SharedRuntime 1.1: Word vanaf 2205, Excel 2002, PowerPoint 2102, en de webversies). Upload het manifest opnieuw.

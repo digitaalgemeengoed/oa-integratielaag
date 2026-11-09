@@ -36,8 +36,12 @@ export const LEZEND: Route[] = [
     patroon: new RegExp(`^objecten/${ID}/versies/([0-9]{1,6})/weergaven/(html|tekst|pdf)$`),
     doel: "platform",
     pad: (m) => `/objecten/${m[1]}/versies/${m[2]}/weergaven/${m[3]}`,
+    // ?soort=geanonimiseerd: de geanonimiseerde weergave
+    metQuery: true,
   },
   { methode: "POST", patroon: /^toegankelijkheid$/, doel: "diensten", pad: () => "/toegankelijkheid" },
+  { methode: "POST", patroon: /^anonimiseren$/, doel: "diensten", pad: () => "/anonimiseren" },
+  { methode: "POST", patroon: /^anonimiseren\/toepassen$/, doel: "diensten", pad: () => "/anonimiseren/toepassen" },
   { methode: "GET", patroon: /^zoeken$/, doel: "platform", pad: () => "/zoeken", metQuery: true },
 ];
 
@@ -46,6 +50,12 @@ export const VASTLEGGEND: Route[] = [
   { methode: "PUT", patroon: new RegExp(`^objecten/${ID}/metadata$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/metadata` },
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/versies$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/versies` },
   { methode: "PUT", patroon: new RegExp(`^objecten/${ID}/aard$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/aard` },
+  {
+    methode: "POST",
+    patroon: new RegExp(`^objecten/${ID}/versies/([0-9]{1,6})/anonimisering$`),
+    doel: "platform",
+    pad: (m) => `/objecten/${m[1]}/versies/${m[2]}/anonimisering`,
+  },
   { methode: "POST", patroon: /^objecttypen$/, doel: "platform", pad: () => "/objecttypen", rol: "beheerder" },
   {
     methode: "POST",

@@ -26,7 +26,7 @@ const KNOPPEN = {
   ond: { label: "Onderdelen", uitleg: "Wat van elders komt. Volgt in het prototype." },
   meta: { label: "Metadateren", uitleg: "Kenmerken van het stuk, registreren en vastleggen." },
   toeg: { label: "Toegankelijkheid", uitleg: "Structuur en alternatieve tekst." },
-  anon: { label: "Anonimiseren", uitleg: "Persoonsgegevens vinden en afschermen. Volgt in het prototype." },
+  anon: { label: "Anonimiseren", uitleg: "Persoonsgegevens vinden en afschermen; eerst een voorbeeld, dan bevestigen." },
   clas: { label: "Classificeren", uitleg: "Openbaarheid en bewaring. Volgt in het prototype." },
   waar: { label: "Waarmerken", uitleg: "Authenticiteit en integriteit van een versie. Volgt in het prototype." },
   flow: { label: "Workflow", uitleg: "Stappen van de procedure. Volgt in het prototype." },
@@ -95,7 +95,7 @@ export function manifest(basis: string): string {
            xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
            xsi:type="TaskPaneApp">
   <Id>${ID}</Id>
-  <Version>0.5.0.0</Version>
+  <Version>0.5.1.0</Version>
   <ProviderName>Digitaal GemeenGoed</ProviderName>
   <DefaultLocale>nl-NL</DefaultLocale>
   <DisplayName DefaultValue="Office Assistent"/>

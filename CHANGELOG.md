@@ -1,5 +1,10 @@
 # Wijzigingen
 
+## 0.9.0 — 2026-11-09
+
+- Routes voor anonimiseren in het document: voorvertoningen laten vervallen, bevestigen, terugzetten per gegeven en een versie terugzetten.
+- De rol beheerder gaat als informatiebeheer mee naar het platform (beperkte versies lezen).
+
 ## 0.8.0 — 2026-11-09
 
 - PPL-niveau uit de Keycloak-rollen `ppl-1`, `ppl-2` en `ppl-3` (de hoogste telt; geen rol is 0). Het niveau gaat mee naar het platform en staat in wie-ben-ik. De dev-gebruikers hebben PPL 1 (medewerker) en PPL 3 (beheerder).

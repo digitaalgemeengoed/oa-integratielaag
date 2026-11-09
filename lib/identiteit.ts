@@ -59,7 +59,14 @@ export function toetsHerkomst(req: NextRequest): void {
 }
 
 export function naarActor(w: WieBenIk): Actor {
-  return { sub: w.sub, naam: w.naam, niveau: w.niveau ?? 0, ...(w.namens ? { namens: w.namens } : {}) };
+  return {
+    sub: w.sub,
+    naam: w.naam,
+    niveau: w.niveau ?? 0,
+    // Informatiebeheer: mag versies lezen die alleen nog voor beheer zijn.
+    ...(w.rollen?.includes("beheerder") ? { beheerder: true } : {}),
+    ...(w.namens ? { namens: w.namens } : {}),
+  };
 }
 
 /** PPL-niveau uit de realm-rollen ppl-1, ppl-2 en ppl-3: de hoogste telt. Geen rol = 0. */

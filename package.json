@@ -1,6 +1,6 @@
 {
   "name": "oa-integratielaag",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "private": true,
   "description": "Integratielaag van de Office Assistent: stelt vast wie er belt, twee ingangen, de browser praat alleen hiermee.",
   "license": "EUPL-1.2",

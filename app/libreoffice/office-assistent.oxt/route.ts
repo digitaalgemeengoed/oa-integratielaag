@@ -11,6 +11,13 @@ export const dynamic = "force-dynamic";
  * van deze omgeving erin. De extensie opent het paneel op dat adres en
  * antwoordt alleen aan pagina's van dat adres.
  */
+/** De versie uit description.xml in de extensie zelf. */
+function versieVan(bestanden: Record<string, Uint8Array>): string {
+  const d = bestanden["description.xml"];
+  const v = d ? /<version value="([^"]+)"/.exec(new TextDecoder().decode(d))?.[1] : undefined;
+  return v?.replace(/[^0-9.]/g, "") || "onbekend";
+}
+
 export async function GET(req: NextRequest) {
   let basis: Uint8Array;
   try {
@@ -24,7 +31,7 @@ export async function GET(req: NextRequest) {
   return new Response(new Uint8Array(oxt), {
     headers: {
       "content-type": "application/vnd.openofficeorg.extension",
-      "content-disposition": 'attachment; filename="office-assistent.oxt"',
+      "content-disposition": `attachment; filename="office-assistent-${versieVan(bestanden)}.oxt"`,
       "cache-control": "no-store",
     },
   });

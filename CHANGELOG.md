@@ -1,5 +1,10 @@
 # Wijzigingen
 
+## 0.9.3 — 2026-11-09
+
+- `/versies.json` (openbaar): de versies van het manifest, de extensie en wat op de servers draait, voor de downloadpagina op office.<domein>.
+- Het versienummer staat in de bestandsnaam van de downloads: `office-assistent-manifest-0.6.0.0.xml` en `office-assistent-0.11.0.oxt`.
+
 ## 0.9.2 — 2026-11-09
 
 Office-manifest 0.6.0.0: knop "Anonimiseer selectie" op het tabblad Assistent en in het rechtermuismenu (Word, Excel ook op een cel, PowerPoint). Opnieuw uploaden.

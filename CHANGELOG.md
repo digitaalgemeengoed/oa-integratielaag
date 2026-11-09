@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.9.2 — 2026-11-09
+
+Office-manifest 0.6.0.0: knop "Anonimiseer selectie" op het tabblad Assistent en in het rechtermuismenu (Word, Excel ook op een cel, PowerPoint). Opnieuw uploaden.
+
 ## 0.9.1 — 2026-11-09
 
 De overzichtspagina toont de versies: wat je zelf installeert (Office-manifest, LibreOffice-extensie; alleen opnieuw als het nummer hoger is) en wat op de servers draait (paneel, adapters, kern, contract, integratielaag, en live van VPS 2 en 3). De manifestversie staat op één plek (`MANIFEST_VERSIE`).

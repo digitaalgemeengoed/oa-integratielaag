@@ -31,12 +31,13 @@ const KNOPPEN = {
   waar: { label: "Waarmerken", uitleg: "Authenticiteit en integriteit van een versie. Volgt in het prototype." },
   flow: { label: "Workflow", uitleg: "Stappen van de procedure. Volgt in het prototype." },
   beoordelen: { label: "Beoordelen", uitleg: "Het stuk beoordelen op toegankelijkheid." },
+  "anon-selectie": { label: "Anonimiseer selectie", uitleg: "De geselecteerde tekst als persoonsgegeven vervangen door een plaatshouder (voorvertoning)." },
 } as const;
 type Knop = keyof typeof KNOPPEN;
 const GROEPEN: [string, string, Knop[]][] = [
   ["OA.G.Paneel", "Paneel", ["paneel"]],
   ["OA.G.Modules", "Modules", ["ovz", "ond", "meta", "toeg", "anon", "clas", "waar", "flow"]],
-  ["OA.G.Controleren", "Controleren", ["beoordelen"]],
+  ["OA.G.Controleren", "Controleren", ["beoordelen", "anon-selectie"]],
 ];
 
 const icoon = (id: string) => `<Icon>
@@ -45,8 +46,11 @@ const icoon = (id: string) => `<Icon>
                       <bt:Image size="80" resid="OA.I.${id}.80"/>
                     </Icon>`;
 
-const knop = (id: Knop) => `
-                  <Control xsi:type="Button" id="OA.K.${id}">
+/** De functie in het takenvenster (word/taskpane.ts): oa_<id>, met _ in plaats van -. */
+const functie = (id: Knop) => `oa_${id.replace(/-/g, "_")}`;
+
+const knop = (id: Knop, voorvoegsel = "OA.K") => `
+                  <Control xsi:type="Button" id="${voorvoegsel}.${id}">
                     <Label resid="OA.L.${id}"/>
                     <Supertip>
                       <Title resid="OA.L.${id}"/>
@@ -54,7 +58,7 @@ const knop = (id: Knop) => `
                     </Supertip>
                     ${icoon(id)}
                     <Action xsi:type="ExecuteFunction">
-                      <FunctionName>oa_${id}</FunctionName>
+                      <FunctionName>${functie(id)}</FunctionName>
                     </Action>
                   </Control>`;
 
@@ -75,17 +79,25 @@ const hostBlok = (h: (typeof HOSTS)[number]) => `
               ([id, label, knoppen]) => `
               <Group id="${id}">
                 <Label resid="${id}"/>
-                ${icoon(knoppen[0])}${knoppen.map(knop).join("")}
+                ${icoon(knoppen[0])}${knoppen.map((k) => knop(k)).join("")}
               </Group>`,
             ).join("")}
               <Label resid="OA.Tab"/>
             </CustomTab>
           </ExtensionPoint>
+          <ExtensionPoint xsi:type="ContextMenu">${(h === "Workbook" ? ["ContextMenuText", "ContextMenuCell"] : ["ContextMenuText"])
+            .map(
+              (menu) => `
+            <OfficeMenu id="${menu}">${knop("anon-selectie", `OA.M.${menu}`)}
+            </OfficeMenu>`,
+            )
+            .join("")}
+          </ExtensionPoint>
         </DesktopFormFactor>
       </Host>`;
 
 /** Versie van het manifest. Ophogen als de knoppen of het lint veranderen: alleen dan moet het opnieuw worden geüpload. */
-export const MANIFEST_VERSIE = "0.5.1.0";
+export const MANIFEST_VERSIE = "0.6.0.0";
 
 export function manifest(basis: string): string {
   const b = esc(basis.replace(/\/$/, ""));
@@ -146,7 +158,7 @@ ${HOSTS.map(hostBlok).join("")}
         <bt:String id="OA.Tab" DefaultValue="Assistent"/>${GROEPEN.map(([id, label]) => `
         <bt:String id="${id}" DefaultValue="${label}"/>`).join("")}${Object.entries(KNOPPEN)
           .map(([id, k]) => `
-        <bt:String id="OA.L.${id}" DefaultValue="${k.label}"/>`)
+        <bt:String id="OA.L.${id}" DefaultValue="${esc(k.label)}"/>`)
           .join("")}
       </bt:ShortStrings>
       <bt:LongStrings>

@@ -1,5 +1,10 @@
 # Wijzigingen
 
+## 0.8.0 — 2026-11-09
+
+- PPL-niveau uit de Keycloak-rollen `ppl-1`, `ppl-2` en `ppl-3` (de hoogste telt; geen rol is 0). Het niveau gaat mee naar het platform en staat in wie-ben-ik. De dev-gebruikers hebben PPL 1 (medewerker) en PPL 3 (beheerder).
+- Routes voor het register van persoonsgegevens: lezen, registreren, inzien, en sleutel vernietigen (alleen beheerder).
+
 ## 0.7.1 — 2026-11-09
 
 Routes voor anonimiseren: `POST /api/lees/anonimiseren`, `POST /api/lees/anonimiseren/toepassen`, `POST /api/vastleg/objecten/:id/versies/:n/anonimisering`; de weergave-route geeft `?soort=geanonimiseerd` door. Manifest 0.5.1.0 (Anonimiseren niet meer "volgt").

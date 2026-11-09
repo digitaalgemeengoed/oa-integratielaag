@@ -1,3 +1,4 @@
+import { niveauUitRollen } from "./identiteit";
 import { createHash } from "node:crypto";
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from "jose";
 import type { WieBenIk } from "@digitaalgemeengoed/oa-contract";
@@ -82,8 +83,8 @@ export async function uitlogAdres(): Promise<string | null> {
 export function naarIdentiteit(p: JWTPayload): WieBenIk {
   const gemeente = String((p as Record<string, unknown>).gemeente ?? "");
   if (!/^[a-z0-9-]{2,40}$/.test(gemeente)) throw new Error("Het token heeft geen geldige claim 'gemeente'");
-  const rollen = ((p as { realm_access?: { roles?: string[] } }).realm_access?.roles ?? []).filter((r) =>
-    ["medewerker", "beheerder", "leverancier"].includes(r),
+  const rollen = ((p as { realm_access?: { roles?: string[] } }).realm_access?.roles ?? []).filter(
+    (r) => ["medewerker", "beheerder", "leverancier"].includes(r) || /^ppl-[123]$/.test(r),
   );
   const leverancier = (p as Record<string, unknown>).leverancier;
   return {
@@ -91,6 +92,7 @@ export function naarIdentiteit(p: JWTPayload): WieBenIk {
     naam: String((p as Record<string, unknown>).name ?? (p as Record<string, unknown>).preferred_username ?? p.sub),
     gemeente,
     rollen,
+    niveau: niveauUitRollen(rollen),
     ...(leverancier ? { namens: String(leverancier) } : {}),
   };
 }

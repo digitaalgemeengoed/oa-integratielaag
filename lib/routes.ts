@@ -25,6 +25,7 @@ export const LEZEND: Route[] = [
   { methode: "GET", patroon: new RegExp(`^objecttypen/${NAAM}$`), doel: "platform", pad: (m) => `/objecttypen/${m[1]}` },
   { methode: "GET", patroon: new RegExp(`^objecten/${ID}$`), doel: "platform", pad: (m) => `/objecten/${m[1]}` },
   { methode: "GET", patroon: new RegExp(`^objecten/${ID}/gebeurtenissen$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/gebeurtenissen` },
+  { methode: "GET", patroon: new RegExp(`^objecten/${ID}/pii$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii` },
   {
     methode: "GET",
     patroon: new RegExp(`^objecten/${ID}/versies/([0-9]{1,6})/inhoud$`),
@@ -50,6 +51,10 @@ export const VASTLEGGEND: Route[] = [
   { methode: "PUT", patroon: new RegExp(`^objecten/${ID}/metadata$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/metadata` },
   { methode: "POST", patroon: new RegExp(`^objecten/${ID}/versies$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/versies` },
   { methode: "PUT", patroon: new RegExp(`^objecten/${ID}/aard$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/aard` },
+  { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii` },
+  // Inzien legt een gebeurtenis vast; daarom achter de vastleggende ingang.
+  { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii/onthul$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii/onthul` },
+  { methode: "POST", patroon: new RegExp(`^objecten/${ID}/pii/vernietig$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/pii/vernietig`, rol: "beheerder" },
   {
     methode: "POST",
     patroon: new RegExp(`^objecten/${ID}/versies/([0-9]{1,6})/anonimisering$`),

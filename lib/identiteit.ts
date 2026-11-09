@@ -1,14 +1,14 @@
 import type { NextRequest } from "next/server";
-import type { Actor, WieBenIk } from "@digitaalgemeengoed/oa-contract";
+import type { Actor, Ppl, WieBenIk } from "@digitaalgemeengoed/oa-contract";
 import { config } from "./config";
 import { leesSessie, SESSIECOOKIE } from "./sessie";
 import { Weigering } from "./antwoord";
 
 /** Testgebruikers voor OA_AUTH=dev. Nooit in een omgeving met echte gegevens. */
 const DEV_GEBRUIKERS: Record<string, WieBenIk> = {
-  "haarlem-medewerker": { sub: "dev-haarlem-1", naam: "Femke de Vries", gemeente: "haarlem", rollen: ["medewerker"] },
-  "haarlem-beheerder": { sub: "dev-haarlem-2", naam: "Jeroen Bakker", gemeente: "haarlem", rollen: ["medewerker", "beheerder"] },
-  "zandvoort-medewerker": { sub: "dev-zandvoort-1", naam: "Sanne Visser", gemeente: "zandvoort", rollen: ["medewerker"] },
+  "haarlem-medewerker": { sub: "dev-haarlem-1", naam: "Femke de Vries", gemeente: "haarlem", rollen: ["medewerker", "ppl-1"], niveau: 1 },
+  "haarlem-beheerder": { sub: "dev-haarlem-2", naam: "Jeroen Bakker", gemeente: "haarlem", rollen: ["medewerker", "beheerder", "ppl-3"], niveau: 3 },
+  "zandvoort-medewerker": { sub: "dev-zandvoort-1", naam: "Sanne Visser", gemeente: "zandvoort", rollen: ["medewerker", "ppl-1"], niveau: 1 },
 };
 
 /**
@@ -59,5 +59,15 @@ export function toetsHerkomst(req: NextRequest): void {
 }
 
 export function naarActor(w: WieBenIk): Actor {
-  return { sub: w.sub, naam: w.naam, ...(w.namens ? { namens: w.namens } : {}) };
+  return { sub: w.sub, naam: w.naam, niveau: w.niveau ?? 0, ...(w.namens ? { namens: w.namens } : {}) };
+}
+
+/** PPL-niveau uit de realm-rollen ppl-1, ppl-2 en ppl-3: de hoogste telt. Geen rol = 0. */
+export function niveauUitRollen(rollen: string[]): Ppl {
+  let n = 0;
+  for (const r of rollen) {
+    const m = /^ppl-([123])$/.exec(r);
+    if (m) n = Math.max(n, Number(m[1]));
+  }
+  return n as Ppl;
 }

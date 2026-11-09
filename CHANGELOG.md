@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.9.6 — 2026-11-09
+
+`GET /api/lees/objecttypen/:naam?versie=n`: het paneel haalt het metadatamodel op waarmee een stuk is vastgelegd. De zoekpagina toont titel en categorie via de rollen (ook bij RGBZ of TMLO).
+
 ## 0.9.5 — 2026-11-09
 
 Route `POST /api/vastleg/objecten/:id/pii/categorie` (de grondslag van een voorvertoning wijzigen) naar het platform.

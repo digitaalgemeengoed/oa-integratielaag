@@ -94,9 +94,9 @@ export default function Zoeken() {
           <ol style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 16 }}>
             {antwoord.resultaten.map((r) => (
               <li key={r.identificatie} style={{ background: "#fff", padding: "12px 16px", borderRadius: 6, boxShadow: "0 1px 3px rgba(0,0,0,.12)" }}>
-                <strong>{String(r.metadata.naam ?? "Zonder naam")}</strong>
+                <strong>{String(r.kern?.titel ?? r.metadata.naam ?? "Zonder naam")}</strong>
                 <div style={{ fontSize: 13, color: "#555" }}>
-                  {[r.metadata.informatiecategorie, r.metadata.vertrouwelijkheid, r.versie ? `versie ${r.versie}` : null].filter(Boolean).join(" · ")}
+                  {[r.kern?.informatiecategorie ?? r.metadata.informatiecategorie, r.kern?.vertrouwelijkheid ?? r.metadata.vertrouwelijkheid, r.versie ? `versie ${r.versie}` : null].filter(Boolean).join(" · ")}
                 </div>
                 {r.fragmenten.map((f, i) => (
                   <p key={i} style={{ margin: "6px 0", fontSize: 14 }} dangerouslySetInnerHTML={{ __html: `…${veiligFragment(f)}…` }} />

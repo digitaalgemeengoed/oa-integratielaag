@@ -11,7 +11,7 @@ export interface Route {
   doel: "platform" | "diensten" | "zelf";
   /** Pad bij het doel, uit de delen van het patroon. */
   pad: (m: RegExpMatchArray) => string;
-  rol?: "medewerker" | "beheerder";
+  rol?: "medewerker" | "beheerder" | "vrijgever";
   /** De querystring gaat mee naar het doel. */
   metQuery?: boolean;
 }
@@ -45,6 +45,10 @@ export const LEZEND: Route[] = [
   { methode: "POST", patroon: /^anonimiseren$/, doel: "diensten", pad: () => "/anonimiseren" },
   { methode: "POST", patroon: /^anonimiseren\/toepassen$/, doel: "diensten", pad: () => "/anonimiseren/toepassen" },
   { methode: "GET", patroon: /^zoeken$/, doel: "platform", pad: () => "/zoeken", metQuery: true },
+  { methode: "GET", patroon: /^classificatie$/, doel: "platform", pad: () => "/classificatie", metQuery: true },
+  // ?object=… (de voorstellen bij een stuk) of zonder: de open voorstellen, alleen voor een vrijgever (het platform toetst).
+  { methode: "GET", patroon: /^voorstellen$/, doel: "platform", pad: () => "/voorstellen", metQuery: true },
+  { methode: "GET", patroon: new RegExp(`^voorstellen/${ID}/weergave$`), doel: "platform", pad: (m) => `/voorstellen/${m[1]}/weergave` },
 ];
 
 export const VASTLEGGEND: Route[] = [
@@ -73,6 +77,9 @@ export const VASTLEGGEND: Route[] = [
     pad: (m) => `/objecten/${m[1]}/versies/${m[2]}/anonimisering`,
   },
   { methode: "POST", patroon: /^objecttypen$/, doel: "platform", pad: () => "/objecttypen", rol: "beheerder" },
+  { methode: "PUT", patroon: new RegExp(`^objecten/${ID}/classificatie$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/classificatie` },
+  { methode: "POST", patroon: new RegExp(`^objecten/${ID}/voorstellen$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/voorstellen` },
+  { methode: "POST", patroon: new RegExp(`^voorstellen/${ID}/beoordeling$`), doel: "platform", pad: (m) => `/voorstellen/${m[1]}/beoordeling`, rol: "vrijgever" },
   {
     methode: "POST",
     patroon: new RegExp(`^objecten/${ID}/onleesbaar$`),

@@ -1,5 +1,10 @@
 # Wijzigingen
 
+## 0.10.0 — 2026-11-10
+
+- Routes voor classificeren en wijzigingsvoorstellen: `lees/classificatie`, `lees/voorstellen`, `lees/voorstellen/:id/weergave`, `vastleg/objecten/:id/classificatie`, `vastleg/objecten/:id/voorstellen` en `vastleg/voorstellen/:id/beoordeling` (rol vrijgever).
+- De Keycloak-rol **vrijgever** gaat mee naar het platform (`actor.vrijgever`). De testgebruiker *Beheerder, Haarlem* is ook vrijgever.
+
 ## 0.9.8 — 2026-11-10
 
 Hangt af van oa-contract 0.7.0 (naam en versie van het metadatamodel).

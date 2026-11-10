@@ -73,7 +73,7 @@ export default async function Start() {
           <p>Deze omgeving draait zonder echte inlog (OA_AUTH=dev).</p>
           <ul>
             <li><a href="/api/auth/login?gebruiker=haarlem-medewerker&terug=/werkomgeving/">Medewerker, Haarlem</a></li>
-            <li><a href="/api/auth/login?gebruiker=haarlem-beheerder&terug=/werkomgeving/">Beheerder, Haarlem</a></li>
+            <li><a href="/api/auth/login?gebruiker=haarlem-beheerder&terug=/werkomgeving/">Beheerder en vrijgever, Haarlem</a></li>
             <li><a href="/api/auth/login?gebruiker=zandvoort-medewerker&terug=/werkomgeving/">Medewerker, Zandvoort</a></li>
           </ul>
         </>

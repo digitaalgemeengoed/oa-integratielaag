@@ -7,7 +7,7 @@ import { Weigering } from "./antwoord";
 /** Testgebruikers voor OA_AUTH=dev. Nooit in een omgeving met echte gegevens. */
 const DEV_GEBRUIKERS: Record<string, WieBenIk> = {
   "haarlem-medewerker": { sub: "dev-haarlem-1", naam: "Femke de Vries", gemeente: "haarlem", rollen: ["medewerker", "ppl-1"], niveau: 1 },
-  "haarlem-beheerder": { sub: "dev-haarlem-2", naam: "Jeroen Bakker", gemeente: "haarlem", rollen: ["medewerker", "beheerder", "ppl-3"], niveau: 3 },
+  "haarlem-beheerder": { sub: "dev-haarlem-2", naam: "Jeroen Bakker", gemeente: "haarlem", rollen: ["medewerker", "beheerder", "vrijgever", "ppl-3"], niveau: 3 },
   "zandvoort-medewerker": { sub: "dev-zandvoort-1", naam: "Sanne Visser", gemeente: "zandvoort", rollen: ["medewerker", "ppl-1"], niveau: 1 },
 };
 
@@ -65,6 +65,8 @@ export function naarActor(w: WieBenIk): Actor {
     niveau: w.niveau ?? 0,
     // Informatiebeheer: mag versies lezen die alleen nog voor beheer zijn.
     ...(w.rollen?.includes("beheerder") ? { beheerder: true } : {}),
+    // Vrijgever: mag een vergrendeld stuk vrijgeven en wijzigingsvoorstellen beoordelen.
+    ...(w.rollen?.includes("vrijgever") ? { vrijgever: true } : {}),
     ...(w.namens ? { namens: w.namens } : {}),
   };
 }

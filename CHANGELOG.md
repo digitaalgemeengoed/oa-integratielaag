@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.9.8 — 2026-11-10
+
+Hangt af van oa-contract 0.7.0 (naam en versie van het metadatamodel).
+
 ## 0.9.7 — 2026-11-09
 
 Hangt af van oa-contract 0.6.0; de meting bij bevestigen gaat ongewijzigd door naar het platform.
